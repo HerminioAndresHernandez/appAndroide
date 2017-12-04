@@ -7,17 +7,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
+
+public class MainActivity extends AppCompatActivity {
 
     public static final int GET_RESULTA = 1;
     public static final int GET_RESULTH = 2;
     public static final int GET_RESULTM = 3;
 
+    OkHttpClient client = new OkHttpClient();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Request request = new Request.Builder().url("http://publicobject.com/helloworld.txt").build();
 
         Button bAyer = (Button) findViewById(R.id.b_ayer);
         bAyer.setOnClickListener(new View.OnClickListener() {
