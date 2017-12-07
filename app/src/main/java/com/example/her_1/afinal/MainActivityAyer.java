@@ -5,18 +5,20 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivityAyer extends AppCompatActivity {
@@ -26,21 +28,25 @@ public class MainActivityAyer extends AppCompatActivity {
     private boolean active = true;
     public DatosPartido dato;
 
+    //JSONObject jsonjObject;
+    JSONArray jsonjArray;
+
     ListView lista;
-    ArrayList<DatosPartido> array;
-    ArrayAdapter<DatosPartido> arrayadapter;
+    ArrayList<String> array;
+    ArrayAdapter<String> arrayadapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        counter = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_ayer);
-        TextView text = (TextView) findViewById(R.id.textView);
-        active = true;
+        //active = true;
 
-        Button bBack = (Button) findViewById(R.id.b_back);
+        FloatingActionButton bBack = (FloatingActionButton) findViewById(R.id.b_back);
         bBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                active = false;
+                //active = false;
                 Intent intent = new Intent();
                 MainActivityAyer.this.setResult(RESULT_OK, intent);
                 MainActivityAyer.this.finish();
@@ -53,30 +59,22 @@ public class MainActivityAyer extends AppCompatActivity {
         lista.setAdapter(arrayadapter);
 
         /**Check internet conection*/
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
 
         if (networkInfo != null && networkInfo.isConnected()) {
             /**Hilo*/
-            AsyncTask<?, ?, ?> asyncTask = new AsyncTask<Object, Integer, Object>() {
+            AsyncTask<?, ?, ?> asyncTask5 = new AsyncTask<Object, Integer, Object>() {
                 @Override
                 protected Object doInBackground(Object... params) {
-                    while (counter < 40) {
-                        synchronized (MainActivityAyer.this) {
-                            try {
-                                //MainActivityAyer.this.wait(1000);
-                                dato = new DatosPartido(String.valueOf(counter), String.valueOf(counter));
-                                array.add(dato);
-                                this.publishProgress(counter);
-
-                                //Log.d(TAG, "Van " + counter + " segundos");
-                            } catch (InternalError e) {
-                                e.printStackTrace();
-                            }
+                    while(true){
+                        while (counter < 5) {
+                            counter++;
+                            array.add(String.valueOf(counter));
+                            this.publishProgress(counter);
                         }
-                        if (!active)
-                            break;
-                        counter++;
+                        break;
                     }
                     return null;
                 }
@@ -84,19 +82,16 @@ public class MainActivityAyer extends AppCompatActivity {
                 @Override
                 protected void onProgressUpdate(Integer... values) {
                     super.onProgressUpdate(values);
-
+                    //Toast.makeText(MainActivityAyer.this, values[0].toString(), Toast.LENGTH_SHORT).show();
                     arrayadapter.notifyDataSetChanged();
                 }
             };
-            asyncTask.execute();
+            asyncTask5.execute();
             //new DownloadWebpageTask().execute(stringUrl);
         } else {
             Intent intent = new Intent();
             MainActivityAyer.this.setResult(RESULT_CANCELED, intent);
             MainActivityAyer.this.finish();
         }
-    }
-    private String generateJson(){
-        return "hola";
     }
 }

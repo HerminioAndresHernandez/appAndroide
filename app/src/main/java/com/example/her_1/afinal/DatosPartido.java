@@ -1,5 +1,7 @@
 package com.example.her_1.afinal;
 
+import android.annotation.SuppressLint;
+import android.os.Parcelable;
 import android.text.format.DateFormat;
 
 import java.util.Date;
@@ -11,9 +13,9 @@ import java.util.SimpleTimeZone;
  * Created by her_1 on 03/12/2017.
  */
 
+@SuppressLint("ParcelCreator")
 public class DatosPartido {
-    String facultad1, facultad2, deporte, resultado, lugar;
-    Date fecha;
+    String facultad1, facultad2, actividad, resultado, lugar, fecha;
 
     public String getFacultad1() {
         return facultad1;
@@ -31,12 +33,12 @@ public class DatosPartido {
         this.facultad2 = facultad2;
     }
 
-    public String getDeporte() {
-        return deporte;
+    public String getActividad() {
+        return actividad;
     }
 
-    public void setDeporte(String deporte) {
-        this.deporte = deporte;
+    public void setActividad(String actividad) {
+        this.actividad = actividad;
     }
 
     public String getResultado() {
@@ -55,29 +57,33 @@ public class DatosPartido {
         this.lugar = lugar;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFecha(long fecha) {
+        this.fecha = DateFormat.format("dd/MM/yyyy", new Date(fecha)).toString();
     }
 
-    public DatosPartido(String f1, String f2, String d, String r, String l, String f){
-        facultad1 = f1;
-        facultad2 = f2;
-
-        deporte = d;
-        resultado = r;
-    }
-    public DatosPartido(String f1, String f2){
-        facultad1 = f1;
-        facultad2 = f2;
-
+    public DatosPartido(){
+        facultad1 = null;
+        facultad2 = null;
+        lugar = null;
+        actividad = null;
     }
     public String toString(){
-        return facultad1.toUpperCase() + " vs. " + facultad2.toUpperCase();
+
+        if(facultad1 != null && facultad2 != null)
+            return  "DEPORTE " + actividad.toUpperCase() + "\r\n" +
+                    fecha +" || "+ lugar + "\r\n" +
+                    facultad1.toUpperCase() + " vs. " + facultad2.toUpperCase() + "\r\n" +
+                    "RES: " + resultado + "\r\n"+
+                    fecha;
+        else
+            return  "ACTIVIDAD CULTURAL "+actividad.toUpperCase() + "\r\n" +
+                    fecha +" || "+ lugar + "\r\n" +
+                    facultad1.toUpperCase() + "\r\n" +
+                    "PUNTOS: " + resultado + "\r\n"+
+                    fecha;
     }
-
-
 }

@@ -1,6 +1,7 @@
 package com.example.her_1.afinal;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,7 @@ public class MainActivityManana extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_manana);
 
-        Button bBack3 = (Button) findViewById(R.id.b_back3);
+        FloatingActionButton bBack3 = (FloatingActionButton) findViewById(R.id.b_back3);
         bBack3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

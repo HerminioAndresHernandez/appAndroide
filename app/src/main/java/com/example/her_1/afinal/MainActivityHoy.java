@@ -1,6 +1,7 @@
 package com.example.her_1.afinal;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,7 @@ public class MainActivityHoy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_hoy);
 
-        Button bBack2 = (Button) findViewById(R.id.b_back2);
+        FloatingActionButton bBack2 = (FloatingActionButton) findViewById(R.id.b_back2);
         bBack2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
