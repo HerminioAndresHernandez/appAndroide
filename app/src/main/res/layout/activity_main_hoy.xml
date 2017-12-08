@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:label="HOY"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.her_1.afinal.MainActivityHoy">
@@ -16,7 +17,8 @@
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="?android:attr/actionModeCloseDrawable" />
+        app:srcCompat="?android:attr/actionModeCloseDrawable"
+        android:textColor="@android:color/white"/>
 
     <ListView
         android:id="@+id/listItem2"

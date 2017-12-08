@@ -65,28 +65,42 @@ public class MainActivityAyer extends AppCompatActivity {
 
         if (networkInfo != null && networkInfo.isConnected()) {
             /**Hilo*/
-            AsyncTask<?, ?, ?> asyncTask5 = new AsyncTask<Object, Integer, Object>() {
+            AsyncTask<?, ?, ?> asyncTask = new AsyncTask<Object, String, Object>() {
                 @Override
                 protected Object doInBackground(Object... params) {
+                    ArrayList<String> aux = getIntent().getStringArrayListExtra("datos");
+
                     while(true){
-                        while (counter < 5) {
-                            counter++;
-                            array.add(String.valueOf(counter));
-                            this.publishProgress(counter);
-                        }
+                        //while (counter < 5) {
+                            for(String s: aux){
+                                synchronized (MainActivityAyer.this) {
+                                    try {
+                                        //MainActivityAyer.this.wait(1000);
+                                        array.add(s);
+                                        //this.publishProgress(counter);
+
+                                        //Log.d(TAG, "Van " + counter + " segundos");
+                                    } catch (InternalError e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                counter++;
+                                this.publishProgress(s);
+                            }
+                        //}
                         break;
                     }
                     return null;
                 }
 
                 @Override
-                protected void onProgressUpdate(Integer... values) {
+                protected void onProgressUpdate(String... values) {
                     super.onProgressUpdate(values);
                     //Toast.makeText(MainActivityAyer.this, values[0].toString(), Toast.LENGTH_SHORT).show();
                     arrayadapter.notifyDataSetChanged();
                 }
             };
-            asyncTask5.execute();
+            asyncTask.execute();
             //new DownloadWebpageTask().execute(stringUrl);
         } else {
             Intent intent = new Intent();

@@ -1,20 +1,15 @@
 package com.example.her_1.afinal;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     Intent intentAyer;
+    Intent intentHoy;
+    Intent intentManana;
 
     TextView text;
 
@@ -61,8 +60,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         text = (TextView) findViewById(R.id.textView);
+
         intentAyer = new Intent(MainActivity.this, MainActivityAyer.class);
         intentAyer.putStringArrayListExtra("datos", new ArrayList<String>());
+        intentHoy = new Intent(MainActivity.this, MainActivityHoy.class);
+        intentHoy.putStringArrayListExtra("datos", new ArrayList<String>());
+        intentManana = new Intent(MainActivity.this, MainActivityManana.class);
+        intentManana.putStringArrayListExtra("datos", new ArrayList<String>());
 
         Request request = new Request.Builder().url("http://publicobject.com/helloworld.txt").build();
 
@@ -74,47 +78,45 @@ public class MainActivity extends AppCompatActivity {
         bSelect.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                start();
                 Intent intent;
                 intent = new Intent(MainActivity.this, MainActivityCalendar.class);
                 startActivityForResult(intent, GET_RESULTC);
             }
         });
-        Button bAyer = (Button) findViewById(R.id.b_ayer);
+        FloatingActionButton bAyer = (FloatingActionButton) findViewById(R.id.b_ayer);
         bAyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(MainActivity.this, MainActivityAyer.class);
-                //intent.putStringArrayListExtra("datos", datos);
-                startActivityForResult(intent, GET_RESULTA);
+
+                startActivityForResult(intentAyer, GET_RESULTA);
             }
         });
-        Button bHoy = (Button) findViewById(R.id.b_hoy);
+        FloatingActionButton bHoy = (FloatingActionButton) findViewById(R.id.b_hoy);
         bHoy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentHoy = new Intent (MainActivity.this, MainActivityHoy.class);
 
                 startActivityForResult(intentHoy, GET_RESULTH);
             }
         });
-        Button bManana = (Button) findViewById(R.id.b_mañana);
+        FloatingActionButton bManana = (FloatingActionButton) findViewById(R.id.b_manana);
         bManana.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentManana = new Intent(MainActivity.this, MainActivityManana.class);
+
                 startActivityForResult(intentManana, GET_RESULTM);
             }
         });
-
-
-
+        //this.start();
+    }
+    public void start(){
         if (networkInfo != null && networkInfo.isConnected()) {
             /**Hilo*/
             AsyncTask<?, ?, ?> asyncTask = new AsyncTask<Object, DatosPartido, Object>() {
                 @Override
                 protected Object doInBackground(Object... params) {
-                    while (true) {
+                    //while (true) {
                         try {
                             /**Reemplazar por el servicio*/
                             jsonjArray = new JSONArray(getPartidos());
@@ -129,52 +131,64 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                            for (int i = 0; i < jsonjArray.length(); i++) {
-                                synchronized (MainActivity.this) {
-                                    try {
-                                        JSONObject jsonObject = jsonjArray.getJSONObject(i);
+                        }
+                    intentAyer.getStringArrayListExtra("datos").clear();
+                    intentHoy.getStringArrayListExtra("datos").clear();
+                    intentManana.getStringArrayListExtra("datos").clear();
+                    for (int i = 0; i < jsonjArray.length(); i++) {
+                        synchronized (MainActivity.this) {
+                            try {
+                                JSONObject jsonObject = jsonjArray.getJSONObject(i);
                                         //MainActivityAyer.this.wait(1000);
                                         //if(jsonObject.getString("fecha").equals())
-                                        dato = new DatosPartido();
-                                        dato.setActividad(jsonObject.getString("deporte"));
-                                        dato.setLugar(jsonObject.getString("lugar"));
-                                        dato.setResultado(jsonObject.getString("resultado"));
-                                        dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
-                                        JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
-                                        dato.setFacultad1(jsonObjectF.getString("nombre"));
-                                        jsonObjectF = jsonObject.getJSONObject("facultad2");
-                                        dato.setFacultad2(jsonObjectF.getString("nombre"));
-                                        this.publishProgress(dato);
+                                dato = new DatosPartido();
+                                dato.setActividad(jsonObject.getString("deporte"));
+                                dato.setLugar(jsonObject.getString("lugar"));
+                                dato.setResultado(jsonObject.getString("resultado"));
+                                dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
+                                JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
+                                dato.setFacultad1(jsonObjectF.getString("nombre"));
+                                jsonObjectF = jsonObject.getJSONObject("facultad2");
+                                dato.setFacultad2(jsonObjectF.getString("nombre"));
+                                this.publishProgress(dato);
                                         //Log.d(TAG, "Van " + counter + " segundos");
-                                    } catch (InternalError e) {
-                                        e.printStackTrace();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                //if (!active)
-
-                                counter++;
-                                active = false;
+                            } catch (InternalError e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            break;
                         }
-                        return null;
                     }
+                    active = false;
+                                //if (!active)
+                                    //break;
+                                //counter++;
+                                //
+                           // }
+                    return null;
+                    //}
                 }
 
                 @Override
                 protected void onProgressUpdate(DatosPartido... values) {
                     super.onProgressUpdate(values);
-                    //mensajeToast(MainActivity.this, values[0].toString());
-                    //arrayadapter.notifyDataSetChanged();
-                    //mensajeToast(MainActivity.this,"compara: " + values[0].getFecha() +" con " + text.getText());
-                    //if(dato.getFecha().equals(text.getText())){
-                        datos = intentAyer.getStringArrayListExtra("datos");
+                    if(Fecha.equals(values[0].getFecha(), text.getText().toString())){
+                        datos = intentHoy.getStringArrayListExtra("datos");
                         datos.add(values[0].toString());
-                        intentAyer.putStringArrayListExtra("datos", datos);
-                        //mensajeToast(MainActivity.this,intentAyer.getStringArrayListExtra("datos").toString());
-                   // }
+                        intentHoy.putStringArrayListExtra("datos", datos);
+                    }else{
+                        if(Fecha.sumarDiasAFecha(text.getText().toString(), -1).equals(Fecha.toDate(values[0].getFecha().toString()))){
+                            datos = intentAyer.getStringArrayListExtra("datos");
+                            datos.add(values[0].toString());
+                            intentAyer.putStringArrayListExtra("datos", datos);
+                        }else {
+                            if (Fecha.sumarDiasAFecha(text.getText().toString(), +1).equals(Fecha.toDate(values[0].getFecha().toString()))) {
+                                datos = intentManana.getStringArrayListExtra("datos");
+                                datos.add(values[0].toString());
+                                intentManana.putStringArrayListExtra("datos", datos);
+                            }
+                        }
+                    }
                 }
             };
             asyncTask.execute();
@@ -187,21 +201,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult ( int RequestCode, int ResultCode, Intent data){
         if (RequestCode == GET_RESULTA) {
             if (ResultCode == RESULT_OK) {
-                MainActivity.mensajeToast(this, "Retorna de AYER");
+                //MainActivity.mensajeToast(this, "Retorna de AYER");
             }else {
                 MainActivity.mensajeToast(this, "No hay conexion a internet");
             }
         }
         if (RequestCode == GET_RESULTH) {
             if (ResultCode == RESULT_OK) {
-                MainActivity.mensajeToast(this, "Retorna de HOY");
+                //MainActivity.mensajeToast(this, "Retorna de HOY");
             }else {
                 MainActivity.mensajeToast(this, "No hay conexion a internet");
             }
         }
         if (RequestCode == GET_RESULTM) {
             if (ResultCode == RESULT_OK) {
-                MainActivity.mensajeToast(this, "Retorna de MAÑANA");
+                //MainActivity.mensajeToast(this, "Retorna de MAÑANA");
                 //tv.setText(data.getStringExtra("result"));
             }else {
                 MainActivity.mensajeToast(this, "No hay conexion a internet");
@@ -211,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
             if (ResultCode == RESULT_OK) {
 
                 text.setText(data.getStringExtra("result"));
-                //text.setText(data.getStringExtra("resultLong"));
                 synchronized (MainActivity.this) {
                     active = true;
                     MainActivity.this.notifyAll();

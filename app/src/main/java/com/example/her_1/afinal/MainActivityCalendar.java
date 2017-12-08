@@ -23,11 +23,10 @@ public class MainActivityCalendar extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                Toast.makeText(getApplicationContext(), "Fecha seleccionada "+i2+"/"+Integer.valueOf(i1+1)+"/"+i, Toast.LENGTH_LONG).show();
+                String res = String.format("%02d",i2)+"/"+String.format("%02d",Integer.valueOf(i1+1))+"/"+i;
+                Toast.makeText(getApplicationContext(), "Fecha seleccionada "+res, Toast.LENGTH_LONG).show();
                 //text.setText(i2+"/"+Integer.valueOf(i1+1)+"/"+i);
-
                 Intent intent = new Intent();
-                String res = i2+"/"+Integer.valueOf(i1+1)+"/"+i;
                 long resLong = Date.parse(res);
                 intent.putExtra("result", res);
                 intent.putExtra("resultLong", String.valueOf(resLong));
