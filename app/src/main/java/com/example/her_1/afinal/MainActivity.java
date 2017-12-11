@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG =  MainActivity.class.getCanonicalName();
 
-    private boolean active = false;
+    private int active = 0;
     private boolean json = false;
 
     /**Check internet conection*/
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         intentManana = new Intent(MainActivity.this, MainActivityManana.class);
         intentManana.putStringArrayListExtra("datos", new ArrayList<String>());
 
-        request_partidos = new Request.Builder().url("http://192.168.1.9:8080/OlimpicRestServer/olimpic/getpartidos").build();
-        request_culturales = new Request.Builder().url("http://192.168.1.9:8080/OlimpicRestServer/olimpic/getculturales").build();
+        request_partidos = new Request.Builder().url("http://192.168.1.3:8080/OlimpicRestServer/olimpic/getpartidos").build();
+        request_culturales = new Request.Builder().url("http://192.168.1.3:8080/OlimpicRestServer/olimpic/getculturales").build();
 
         SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         Date auxDate = new Date();
@@ -99,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     String responseData = response.body().string();
-                    jsonjArray_partidos = new JSONArray(responseData);
+
                     synchronized (MainActivity.this) {
-                        active = true;
+                        active +=1;
+                        jsonjArray_partidos = new JSONArray(responseData);
                         MainActivity.this.notifyAll();
                     }
                     Log.d(TAG, "ANDAAAAAAAAAAAAAAAAAAAAAAA33333333");
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*client.newCall(request_culturales).enqueue(new Callback() {
+        client.newCall(request_culturales).enqueue(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -121,15 +122,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     String responseData = response.body().string();
-                    jsonjArray_culturales = new JSONArray(responseData);
+
                     synchronized (MainActivity.this) {
-                        active = true;
+                        active +=1;
+                        jsonjArray_culturales = new JSONArray(responseData);
                         MainActivity.this.notifyAll();
                     }
                     Log.d(TAG, "ANDAAAAAAAAAAAAAAAAAAAAAAA33333333");
                 } catch (JSONException e) {Log.d(TAG, "NO ANDAAAAAAAAAAAAAAAAAAAAAAA2");}
             }
-        });*/
+        });
 
         /**Check internet conection*/
         connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -168,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected Object doInBackground(Object... params) {
 
-                    while (!active) {
+                    while (active < 2) {
                         synchronized (MainActivity.this) {
                             try {
                                 MainActivity.this.wait();
@@ -181,9 +183,6 @@ public class MainActivity extends AppCompatActivity {
                     intentAyer.getStringArrayListExtra("datos").clear();
                     intentHoy.getStringArrayListExtra("datos").clear();
                     intentManana.getStringArrayListExtra("datos").clear();
-
-                    //Log.d(TAG,jsonjArray_partidos.length());
-
                     for (int i = 0; i < jsonjArray_partidos.length(); i++) {
                         synchronized (MainActivity.this) {
                             try {
@@ -213,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
                                 Cultural dato = new Cultural();
                                 dato.setActividad(jsonObject.getString("actividad"));
                                 dato.setLugar(jsonObject.getString("lugar"));
-                                dato.setPuntos(jsonObject.getInt("puntos"));
+                                dato.setPuntos(jsonObject.getString("puntos"));
                                 dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
-                                JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
+                                JSONObject jsonObjectF = jsonObject.getJSONObject("facultad");
                                 dato.setFacultad1(jsonObjectF.getString("nombre"));
                                 this.publishProgress(dato);
                             } catch (InternalError e) {
@@ -225,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    active = false;
+                    active = 0;
                     return null;
                 }
 
@@ -252,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             asyncTask.execute();
-            //new DownloadWebpageTask().execute(stringUrl);
         } else {
             mensajeToast(this, "No hay conexion a internet");
         }
@@ -277,7 +275,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public static void mensajeToast(MainActivity a, String msj){
         Toast toast = Toast.makeText(a, msj, Toast.LENGTH_SHORT);
-        //toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.show();
     }
 }

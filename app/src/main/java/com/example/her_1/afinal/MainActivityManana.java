@@ -31,11 +31,6 @@ public class MainActivityManana extends AppCompatActivity {
         bBack3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /** Obtener informacion del intent anterior
-                 Intent intAnt = getIntent();
-                 String num1 = intAnt.getStringExtra("number1");
-                 String num2 = intAnt.getStringExtra("number2");
-                 **/
 
                 Intent intent = new Intent();
                 MainActivityManana.this.setResult(RESULT_OK, intent);
@@ -63,11 +58,7 @@ public class MainActivityManana extends AppCompatActivity {
                         for(String s: aux){
                             synchronized (MainActivityManana.this) {
                                 try {
-                                    //MainActivityAyer.this.wait(1000);
                                     array.add(s);
-                                    //this.publishProgress(counter);
-
-                                    //Log.d(TAG, "Van " + counter + " segundos");
                                 } catch (InternalError e) {
                                     e.printStackTrace();
                                 }
@@ -82,12 +73,10 @@ public class MainActivityManana extends AppCompatActivity {
                 @Override
                 protected void onProgressUpdate(String... values) {
                     super.onProgressUpdate(values);
-                    //Toast.makeText(MainActivityAyer.this, values[0].toString(), Toast.LENGTH_SHORT).show();
                     arrayadapter.notifyDataSetChanged();
                 }
             };
             asyncTask.execute();
-            //new DownloadWebpageTask().execute(stringUrl);
         } else {
             Intent intent = new Intent();
             MainActivityManana.this.setResult(RESULT_CANCELED, intent);

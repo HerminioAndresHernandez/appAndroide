@@ -9,6 +9,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -19,9 +20,9 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="255dp"
+        android:layout_width="154dp"
         android:layout_height="29dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="25dp"
         android:layout_marginTop="68dp"
         android:layout_weight="1"
         android:text="Seleccionar dia"
@@ -29,24 +30,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="25dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="76dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="68dp"
         android:layout_weight="1"
-        android:clickable="true"
+        android:text="fecha"
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_compass" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="209dp"
-        android:layout_height="64dp"
+        android:layout_width="218dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="50dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -98,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -128,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginEnd="50dp"
         android:layout_marginTop="250dp"
         app:layout_constraintBottom_toBottomOf="parent"

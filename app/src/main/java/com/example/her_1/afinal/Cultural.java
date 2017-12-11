@@ -6,10 +6,10 @@ package com.example.her_1.afinal;
 
 public class Cultural extends Evento{
 
-    private int puntos;
+        private String puntos;
     private String actividad;
 
-    public Cultural(int puntos,String actividad, int id, String lugar, String fecha, String facultad1){
+    public Cultural(String puntos,String actividad, int id, String lugar, String fecha, String facultad1){
 
         super(id,lugar,fecha,facultad1);
         this.puntos = puntos;
@@ -24,7 +24,7 @@ public class Cultural extends Evento{
         return actividad;
     }
 
-    public int getPuntos() {
+    public String getPuntos() {
         return puntos;
     }
 
@@ -32,7 +32,16 @@ public class Cultural extends Evento{
         this.actividad = actividad;
     }
 
-    public void setPuntos(int puntos) {
+    public void setPuntos(String puntos) {
         this.puntos = puntos;
+    }
+
+
+    public String toString(){
+            return  "ACTIVIDAD CULTURAL "+actividad.toUpperCase() + "\r\n" +
+                    getFecha() +" || "+ getLugar() + "\r\n" +
+                    getFacultad1().toUpperCase() + "\r\n" +
+                    "PUNTOS: " + puntos + "\r\n";
+
     }
 }

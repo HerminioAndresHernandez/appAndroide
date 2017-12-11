@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class MainActivityHoy extends AppCompatActivity {
 
-
     ListView lista;
     ArrayList<String> array;
     ArrayAdapter<String> arrayadapter;
@@ -57,11 +56,7 @@ public class MainActivityHoy extends AppCompatActivity {
                         for(String s: aux){
                             synchronized (MainActivityHoy.this) {
                                 try {
-                                    //MainActivityAyer.this.wait(1000);
                                     array.add(s);
-                                    //this.publishProgress(counter);
-
-                                    //Log.d(TAG, "Van " + counter + " segundos");
                                 } catch (InternalError e) {
                                     e.printStackTrace();
                                 }
@@ -76,12 +71,10 @@ public class MainActivityHoy extends AppCompatActivity {
                 @Override
                 protected void onProgressUpdate(String... values) {
                     super.onProgressUpdate(values);
-                    //Toast.makeText(MainActivityAyer.this, values[0].toString(), Toast.LENGTH_SHORT).show();
                     arrayadapter.notifyDataSetChanged();
                 }
             };
             asyncTask.execute();
-            //new DownloadWebpageTask().execute(stringUrl);
         } else {
             Intent intent = new Intent();
             MainActivityHoy.this.setResult(RESULT_CANCELED, intent);
