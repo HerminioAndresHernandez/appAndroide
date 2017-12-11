@@ -1,13 +1,10 @@
 package com.example.her_1.afinal;
 
 import android.annotation.SuppressLint;
-import android.os.Parcelable;
 import android.text.format.DateFormat;
 
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.SimpleTimeZone;
+
 
 /**
  * Created by her_1 on 03/12/2017.

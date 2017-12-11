@@ -26,8 +26,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".MainActivityManana"
             android:screenOrientation="portrait"/>
-        <activity android:name=".MainActivityCalendar"
-            android:screenOrientation="portrait"></activity>
 
     </application>
 
