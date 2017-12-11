@@ -8,9 +8,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String fecha = null;
     private int counter = 0;
     private boolean active = false;
-    public DatosPartido dato;
-
 
     /**Check internet conection*/
     public static ConnectivityManager connMgr;
@@ -53,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<String> datos;
 
     OkHttpClient client = new OkHttpClient();
-    Request request;
+    Request request_partidos;
+    Request request_culturales;
 
     Intent intentAyer;
     Intent intentHoy;
@@ -61,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     TextView text;
 
-    JSONArray jsonjArray;
+    JSONArray jsonjArray_partidos;
+    JSONArray jsonjArray_culturales;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,23 +71,38 @@ public class MainActivity extends AppCompatActivity {
         intentManana = new Intent(MainActivity.this, MainActivityManana.class);
         intentManana.putStringArrayListExtra("datos", new ArrayList<String>());
 
-        request = new Request.Builder().url("http://192.168.0.3:8080/OlimpicRestServer/olimpic/getpartidos").build();
+        request_partidos = new Request.Builder().url("http://192.168.0.3:8080/OlimpicRestServer/olimpic/getpartidos").build();
+        request_culturales = new Request.Builder().url("http://192.168.0.3:8080/OlimpicRestServer/olimpic/getculturales").build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request_partidos).enqueue(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                Log.d(TAG, "NO ANDAAAAAAAAAAAAAAAAAAAAAAA");
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     String responseData = response.body().string();
-                    jsonjArray = new JSONArray(responseData);
-                    Log.d(TAG, "ANDAAAAAAAAAAAAAAAAAAAAAAA33333333");
-                } catch (JSONException e) {Log.d(TAG, "NO ANDAAAAAAAAAAAAAAAAAAAAAAA2");}
+                    jsonjArray_partidos = new JSONArray(responseData);
+                } catch (JSONException e) {e.printStackTrace();}
+            }
+        });
+
+        client.newCall(request_culturales).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    jsonjArray_culturales = new JSONArray(responseData);
+                } catch (JSONException e) {e.printStackTrace();}
             }
         });
 
@@ -139,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
     public void start(){
         if (networkInfo != null && networkInfo.isConnected()) {
             /**Hilo*/
-            AsyncTask<?, ?, ?> asyncTask = new AsyncTask<Object, DatosPartido, Object>() {
+            AsyncTask<?, ?, ?> asyncTask = new AsyncTask<Object, Evento, Object>(){
+
                 @Override
                 protected Object doInBackground(Object... params) {
 
@@ -157,23 +168,40 @@ public class MainActivity extends AppCompatActivity {
                     intentHoy.getStringArrayListExtra("datos").clear();
                     intentManana.getStringArrayListExtra("datos").clear();
 
-                    for (int i = 0; i < jsonjArray.length(); i++) {
+                    for (int i = 0; i < jsonjArray_partidos.length(); i++) {
                         synchronized (MainActivity.this) {
                             try {
-                                JSONObject jsonObject = jsonjArray.getJSONObject(i);
-                                        //MainActivityAyer.this.wait(1000);
-                                        //if(jsonObject.getString("fecha").equals())
-                                dato = new DatosPartido();
-                                dato.setActividad(jsonObject.getString("deporte"));
+                                JSONObject jsonObject = jsonjArray_partidos.getJSONObject(i);
+                                Deporte dato = new Deporte();
+                                dato.setDeporte(jsonObject.getString("deporte"));
                                 dato.setLugar(jsonObject.getString("lugar"));
                                 dato.setResultado(jsonObject.getString("resultado"));
-                                dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
+                                dato.setFecha(jsonObject.getString("fecha"));
                                 JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
                                 dato.setFacultad1(jsonObjectF.getString("nombre"));
                                 jsonObjectF = jsonObject.getJSONObject("facultad2");
                                 dato.setFacultad2(jsonObjectF.getString("nombre"));
                                 this.publishProgress(dato);
-                                        //Log.d(TAG, "Van " + counter + " segundos");
+                            } catch (InternalError e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < jsonjArray_culturales.length(); i++) {
+                        synchronized (MainActivity.this){
+                            try {
+                                JSONObject jsonObject = jsonjArray_culturales.getJSONObject(i);
+                                Cultural dato = new Cultural();
+                                dato.setActividad(jsonObject.getString("actividad"));
+                                dato.setLugar(jsonObject.getString("lugar"));
+                                dato.setPuntos(jsonObject.getInt("puntos"));
+                                dato.setFecha(jsonObject.getString("fecha"));
+                                JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
+                                dato.setFacultad1(jsonObjectF.getString("nombre"));
+                                this.publishProgress(dato);
                             } catch (InternalError e) {
                                 e.printStackTrace();
                             } catch (JSONException e) {
@@ -192,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                protected void onProgressUpdate(DatosPartido... values) {
+                protected void onProgressUpdate(Evento... values) {
                     super.onProgressUpdate(values);
                     if(Fecha.equals(values[0].getFecha(), text.getText().toString())){
                         datos = intentHoy.getStringArrayListExtra("datos");

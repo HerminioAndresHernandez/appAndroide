@@ -6,18 +6,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -26,7 +21,7 @@ public class MainActivityAyer extends AppCompatActivity {
     private int counter = 0;
     private static final String TAG =  MainActivity.class.getCanonicalName();
     private boolean active = true;
-    public DatosPartido dato;
+    public Deporte dato;
 
     //JSONObject jsonjObject;
     JSONArray jsonjArray;
