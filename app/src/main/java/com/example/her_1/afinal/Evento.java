@@ -1,5 +1,8 @@
 package com.example.her_1.afinal;
 
+import android.text.format.DateFormat;
+import java.util.Date;
+
 /**
  * Created by Ignacio on 11/12/2017.
  */
@@ -41,8 +44,8 @@ public class Evento {
         this.facultad1 = facultad1;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setFecha(long fecha) {
+        this.fecha = DateFormat.format("dd/MM/yyyy", new Date(fecha)).toString();
     }
 
     public void setId(int id) {

@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                                 dato.setDeporte(jsonObject.getString("deporte"));
                                 dato.setLugar(jsonObject.getString("lugar"));
                                 dato.setResultado(jsonObject.getString("resultado"));
-                                dato.setFecha(jsonObject.getString("fecha"));
+                                dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
                                 JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
                                 dato.setFacultad1(jsonObjectF.getString("nombre"));
                                 jsonObjectF = jsonObject.getJSONObject("facultad2");
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                                 dato.setActividad(jsonObject.getString("actividad"));
                                 dato.setLugar(jsonObject.getString("lugar"));
                                 dato.setPuntos(jsonObject.getInt("puntos"));
-                                dato.setFecha(jsonObject.getString("fecha"));
+                                dato.setFecha(Long.valueOf(jsonObject.getString("fecha")).longValue());
                                 JSONObject jsonObjectF = jsonObject.getJSONObject("facultad1");
                                 dato.setFacultad1(jsonObjectF.getString("nombre"));
                                 this.publishProgress(dato);
