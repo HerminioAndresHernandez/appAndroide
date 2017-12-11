@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        client.newCall(request_culturales).enqueue(new Callback() {
+        /*client.newCall(request_culturales).enqueue(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "ANDAAAAAAAAAAAAAAAAAAAAAAA33333333");
                 } catch (JSONException e) {Log.d(TAG, "NO ANDAAAAAAAAAAAAAAAAAAAAAAA2");}
             }
-        });
+        });*/
 
         /**Check internet conection*/
         connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
                     intentAyer.getStringArrayListExtra("datos").clear();
                     intentHoy.getStringArrayListExtra("datos").clear();
                     intentManana.getStringArrayListExtra("datos").clear();
+
+                    //Log.d(TAG,jsonjArray_partidos.length());
 
                     for (int i = 0; i < jsonjArray_partidos.length(); i++) {
                         synchronized (MainActivity.this) {
